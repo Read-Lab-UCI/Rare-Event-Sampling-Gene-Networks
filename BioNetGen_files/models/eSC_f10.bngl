@@ -1,0 +1,230 @@
+begin model
+begin parameters
+	h 1E-5 #DNA binding rate
+	f 1E1 #DNA unbinding rate
+	goff 100 #Transcription factor growth rate when gene is off
+    gon 3900 #Transcription factor growth rate when gene is on
+	k 1 #Transcription factor death rate
+end parameters
+begin molecule types
+    GATA6(r1~0~1,r2~0~1,a1~0~1,a2~0~1) #GATA6 gene, 2 repressors, 2 activators
+    GCNF(a1~0~1,a2~0~1) #GCNF gene, 2 activators
+    CDX2(r1~0~1,r2~0~1,a1~0~1) #CDX2 2 repressors, 1 activator
+    KLF4(a1~0~1,a2~0~1,a3~0~1) #KLF4 3 activators
+    NANOG(r1~0~1,r2~0~1,a1~0~1,a2~0~1,a3~0~1) #NANOG 2 repressors, 3 activators
+    PBX1(a1~0~1) #PBX1 1 activator
+    OCT4(r1~0~1,r2~0~1,a1~0~1) #OCT4, 2 repressors, 1 activator
+    SOX2(a1~0~1) #SOX2 1 activator
+    ga() #Transcription factor (TF) of the GATA6 gene
+    oc() #TF of the OCT4 gene
+    na() #TF of NANOG
+    so() #TF of SOX2
+    pb() #TF of PBX1
+    cd() #TF of CDX2
+    gc() #TF of GCNF
+    kl() #TF of KLF4
+    trash
+end molecule types
+begin species #initial molecule count
+#THESE SHOULD ALWAYS REMAIN 1
+    GATA6(r1~0,r2~0,a1~0,a2~0) 1
+    GCNF(a1~0,a2~0) 1
+    CDX2(r1~0,r2~0,a1~0) 1
+    KLF4(a1~0,a2~0,a3~0) 1
+    NANOG(r1~0,r2~0,a1~0,a2~0,a3~0) 1
+    PBX1(a1~0) 1
+    OCT4(r1~0,r2~0,a1~0) 1
+    SOX2(a1~0) 1
+ 
+#YOU CAN CHANGE THE INITIAL COUNT OF THE TRANSCRIPTION FACTORS
+    ga() 100
+    oc() 100
+    na() 100
+    so() 100
+    pb() 100
+    cd() 100
+    gc() 100
+    kl() 100
+    $trash 0
+
+end species
+begin observables
+    Molecules NANOG na()
+    Molecules GATA6 ga()
+    Molecules CDX2 cd()
+    Molecules OCT4 oc()
+    Molecules SOX2 so()
+    Molecules KLF4 kl()	
+    Molecules PBX1 pb()
+    Molecules GCNF gc()
+
+end observables
+begin reaction rules
+
+    #GATA6
+
+    #all possible combinations of GATA6 binding
+    GATA6(a1~0,a2,r1,r2) + ga() + ga()  <-> GATA6(a1~1,a2,r1,r2) h,f
+    GATA6(a1,a2~0,r1,r2) + oc() + so() <-> GATA6(a1,a2~1,r1,r2) h,f
+  #GATA6(a1,a2,r1,r2~0) + oc() + so() <-> GATA6(a1,a2,r1,r2~1) h,f
+ GATA6(a1,a2,r1~0,r2) + na() + na() <-> GATA6(a1,a2,r1~1,r2) h,f
+    GATA6(a1,a2,r1,r2~0) + oc() + oc() <-> GATA6(a1,a2,r1,r2~1) h,f
+#	 GATA6(a1,a2~0,r1,r2) + oc() + oc() <-> GATA6(a1,a2~1,r1,r2) h,f
+
+    #GATA6 one or more activators bound, no repressors bound
+    GATA6(a1~1,a2~0,r1~0,r2~0) -> GATA6(a1~1,a2~0,r1~0,r2~0) + ga() gon
+    GATA6(a1~0,a2~1,r1~0,r2~0) -> GATA6(a1~0,a2~1,r1~0,r2~0) + ga() gon
+    GATA6(a1~1,a2~1,r1~0,r2~0) -> GATA6(a1~1,a2~1,r1~0,r2~0) + ga() gon
+
+    #GATA6 with nothing bound, or with at least one repressor bound
+    GATA6(a1~0,a2~0,r1~0,r2~0) -> GATA6(a1~0,a2~0,r1~0,r2~0) + ga() goff  
+    GATA6(r1~1,r2~0) -> GATA6(r1~1,r2~0) + ga() goff  
+    GATA6(r1~0,r2~1) -> GATA6(r1~0,r2~1) + ga() goff  
+    GATA6(r1~1,r2~1) -> GATA6(r1~1,r2~1) + ga() goff  
+
+    #death rates of ga
+    ga() -> trash k
+    
+    #GCNF
+    
+    #all possible combinations of GCNF binding
+   GCNF(a1~0) + ga() + ga() <-> GCNF(a1~1)  h,f
+   GCNF(a2~0) + cd() + cd() <-> GCNF(a2~1)  h,f
+
+    #GCNF with one or more activators bound, no repressors bound
+    GCNF(a1~1,a2~0) -> GCNF(a1~1,a2~0)  + gc() gon
+    GCNF(a1~0,a2~1) -> GCNF(a1~0,a2~1)  + gc() gon
+    GCNF(a1~1,a2~1) -> GCNF(a1~1,a2~1)  + gc() gon
+
+    #GCNF with nothing bound, or with at least one repressor bound
+    GCNF(a1~0,a2~0) -> GCNF(a1~0,a2~0) + gc() goff
+
+    #death rates of gc
+    gc() -> trash k
+    
+    #CDX2
+    #all possible combinations of CDX2 binding
+    CDX2(a1~0) + cd() + cd() <-> CDX2(a1~1) h,f
+    CDX2(r1~0) + na() + na() <-> CDX2(r1~1) h,f
+    CDX2(r2~0) + oc() + oc() <-> CDX2(r2~1) h,f
+
+    #CDX2 with one or more activators bound, no repressors bound
+    CDX2(a1~1,r1~0,r2~0) -> CDX2(a1~1,r1~0,r2~0) + cd() gon
+
+    #CDX2 with nothing bound, or with at least one repressor bound
+    CDX2(a1~0,r1~0,r2~0) -> CDX2(a1~0,r1~0,r2~0) + cd() goff    
+    CDX2(r1~1,r2~0) -> CDX2(r1~1,r2~0) + cd() goff    
+    CDX2(r1~0,r2~1) -> CDX2(r1~0,r2~1) + cd() goff    
+    CDX2(r1~1,r2~1) -> CDX2(r1~1,r2~1) + cd() goff    
+
+    #death rates of cd
+    cd() -> trash k    
+
+    #KLF4
+#################################################
+    #all possible combinations of KLF4 binding
+    KLF4(a1~0) + so() + so() <-> KLF4(a1~1)  h,f
+    KLF4(a2~0) + na() + na() <-> KLF4(a2~1)  h,f
+    KLF4(a3~0) + oc() + oc() <-> KLF4(a3~1)  h,f
+
+    #KLF4 with one or more activators bound
+    KLF4(a1~1,a2~0,a3~0) -> KLF4(a1~1,a2~0,a3~0) + kl() gon
+    KLF4(a1~0,a2~1,a3~0) -> KLF4(a1~0,a2~1,a3~0) + kl() gon
+    KLF4(a1~0,a2~0,a3~1) -> KLF4(a1~0,a2~0,a3~1) + kl() gon
+
+     KLF4(a1~1,a2~1,a3~0) -> KLF4(a1~1,a2~1,a3~0) + kl() gon
+     KLF4(a1~1,a2~0,a3~1) -> KLF4(a1~1,a2~0,a3~1) + kl() gon
+     KLF4(a1~0,a2~1,a3~1) -> KLF4(a1~0,a2~1,a3~1) + kl() gon
+
+     KLF4(a1~1,a2~1,a3~1) -> KLF4(a1~1,a2~1,a3~1) + kl() gon
+
+    #KLF4 with nothing bound, or with at least one repressor bound
+    KLF4(a1~0,a2~0,a3~0) -> KLF4(a1~0,a2~0,a3~0)  + kl() goff
+
+    #death rates of kl
+    kl() -> trash k    
+
+    #NANOG
+####################################################
+    #all possible combinations of NANOG binding
+    NANOG(a1~0) + kl() + kl() <-> NANOG(a1~1)  h,f
+    NANOG(a2~0) + pb() + pb() <-> NANOG(a2~1)  h,f
+    NANOG(a3~0) + oc() + so() <-> NANOG(a3~1)  h,f
+    NANOG(r1~0) + na() + na() <-> NANOG(r1~1)  h,f
+    NANOG(r2~0) + ga() + ga() <-> NANOG(r2~1)  h,f
+
+    #NANOG with all 3 activators bound, no repressors bound
+    NANOG(a1~1,a2~1,a3~1,r1~0,r2~0) -> NANOG(a1~1,a2~1,a3~1,r1~0,r2~0) + na() gon
+    
+    #NANOG without all 3 activators
+    NANOG(a1~0,a2~1,a3~1) -> NANOG(a1~0,a2~1,a3~1) + na() goff
+    NANOG(a1~1,a2~0,a3~1) -> NANOG(a1~1,a2~0,a3~1) + na() goff
+    NANOG(a1~1,a2~1,a3~0) -> NANOG(a1~1,a2~1,a3~0) + na() goff
+    
+    NANOG(a1~0,a2~0,a3~1) -> NANOG(a1~0,a2~0,a3~1) + na() goff
+    NANOG(a1~0,a2~1,a3~0) -> NANOG(a1~0,a2~1,a3~0) + na() goff
+    NANOG(a1~1,a2~0,a3~0) -> NANOG(a1~1,a2~0,a3~0) + na() goff
+
+    NANOG(a1~0,a2~0,a3~0) -> NANOG(a1~0,a2~0,a3~0) + na() goff
+ 
+    #NANOG with all 3 activators, but also repressors
+    NANOG(a1~1,a2~1,a3~1,r1~1,r2~0) -> NANOG(a1~1,a2~1,a3~1,r1~1,r2~0) + na() goff
+    NANOG(a1~1,a2~1,a3~1,r1~0,r2~1) -> NANOG(a1~1,a2~1,a3~1,r1~0,r2~1) + na() goff
+    NANOG(a1~1,a2~1,a3~1,r1~1,r2~1) -> NANOG(a1~1,a2~1,a3~1,r1~1,r2~1) + na() goff
+
+    #death rates of na
+    na() -> trash k
+    
+    #OCT4
+
+    #all possible combinations of OCT4 binding
+    OCT4(a1~0) + oc() + so() <-> OCT4(a1~1) h,f
+    OCT4(r1~0) + cd() + cd() <-> OCT4(r1~1) h,f
+    OCT4(r2~0) + gc() + gc() <-> OCT4(r2~1) h,f
+
+    #OCT4 with no repressors bound and with one or more activators bound
+    OCT4(a1~1,r1~0,r2~0) -> OCT4(a1~1,r1~0,r2~0) + oc() gon
+
+    #OCT4 with nothing bound, or with at least one repressor bound
+    OCT4(a1~0) -> OCT4(a1~0) + oc() goff  
+    OCT4(a1~1,r1~1,r2~0) -> OCT4(a1~1,r1~1,r2~0) + oc() goff
+    OCT4(a1~1,r1~0,r2~1) -> OCT4(a1~1,r1~0,r2~1) + oc() goff
+    OCT4(a1~1,r1~1,r2~1) -> OCT4(a1~1,r1~1,r2~1) + oc() goff
+
+    #death rates of oc
+    oc() -> trash k    
+    
+    #PBX1
+
+    #all possible combinations of PBX1 binding
+    PBX1(a1~0) + na() + na() <-> PBX1(a1~1) h,f
+
+    #PBX1 with no repressors bound and with one or more activators bound
+    PBX1(a1~1) -> PBX1(a1~1) + pb() gon
+    
+    #PBX1 with nothing bound
+    PBX1(a1~0) -> PBX1(a1~0) + pb() goff
+
+    #death rates of pb
+    pb() -> trash k  
+
+    #SOX2
+
+    #all possible combinations of SOX2 binding
+    SOX2(a1~0) + oc() + so() <-> SOX2(a1~1) h,f
+
+    #SOX2 with no repressors bound and with one or more activators bound
+    SOX2(a1~1) -> SOX2(a1~1) + so() gon
+
+    #SOX2 with nothing bound
+    SOX2(a1~0) -> SOX2(a1~0) + so() goff
+
+    #death rates of so
+    so() -> trash k  
+    
+end reaction rules
+end model
+
+#ACTIONS
+generate_network({overwrite=>1});
+simulate_ssa({t_start=>0,t_end=>0.1,n_steps=>2});

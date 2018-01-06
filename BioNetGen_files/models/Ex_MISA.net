@@ -1,0 +1,49 @@
+# Created by BioNetGen 2.2.6-stable
+begin parameters
+    1 g0        4.0  # Constant
+    2 g1        18.0  # Constant
+    3 k         1.0  # Constant
+    4 ha        1e-5  # Constant
+    5 hr        1e-1  # Constant
+    6 fa        1e-5  # Constant
+    7 fr        1  # Constant
+end parameters
+begin species
+    1 GeneA_00() 0
+    2 GeneA_01() 0
+    3 GeneA_10() 1
+    4 GeneB_00() 0
+    5 GeneB_01() 1
+    6 GeneB_10() 0
+    7 A() 4
+    8 B() 18
+    9 $pool() 0
+end species
+begin reactions
+    1 1 1,7 g0 #_R1
+    2 2 2,7 g1 #_R2
+    3 3 3,7 g0 #_R3
+    4 1,7,7 2 0.5*ha #_R4
+    5 2 1,7,7 fa #_reverse__R4
+    6 1,8,8 3 0.5*hr #_R5
+    7 3 1,8,8 fr #_reverse__R5
+    8 4 4,8 g0 #_R6
+    9 5 5,8 g1 #_R7
+   10 6 6,8 g0 #_R8
+   11 4,8,8 5 0.5*ha #_R9
+   12 5 4,8,8 fa #_reverse__R9
+   13 4,7,7 6 0.5*hr #_R10
+   14 6 4,7,7 fr #_reverse__R10
+   15 7 9 k #_R11
+   16 8 9 k #_R12
+end reactions
+begin groups
+    1 A                    7
+    2 B                    8
+    3 GeneA_00             1
+    4 GeneA_01             2
+    5 GeneA_10             3
+    6 GeneB_00             4
+    7 GeneB_01             5
+    8 GeneB_10             6
+end groups

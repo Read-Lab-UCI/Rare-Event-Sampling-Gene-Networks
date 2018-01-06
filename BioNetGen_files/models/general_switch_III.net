@@ -1,0 +1,84 @@
+# Created by BioNetGen 2.2.2
+substanceUnits("Number");
+begin parameters
+    1 h     0.01  # Constant
+    2 f     1  # Constant
+    3 g     80  # Constant
+    4 k     1  # Constant
+end parameters
+begin molecule types
+    1 Aon()
+    2 trash()
+    3 b()
+    4 a()
+    5 Boff()
+    6 Aoff()
+    7 Bon()
+end molecule types
+begin observables
+    1 Molecules a a()
+    2 Molecules b b()
+    3 Molecules Aon Aon()
+    4 Molecules Bon Bon()
+    5 Molecules Aoff Aoff()
+    6 Molecules Boff Boff()
+end observables
+begin species
+    1 a()      80
+    2 b()      0
+    3 Aon()    1
+    4 Bon()    0
+    5 Aoff()   0
+    6 Boff()   1
+    7 $trash() 0
+end species
+begin reaction rules
+  Rule1:  a() + a() + Bon() <-> Boff()  h, f
+  # Add Species Boff()
+  # Delete Pattern a()
+  # Delete Pattern a()
+  # Delete Pattern Bon()
+  # Reverse
+  # Add Species a()
+  # Add Species a()
+  # Add Species Bon()
+  # Delete Pattern Boff()
+  Rule2:  b() + b() + Aon() <-> Aoff()  h, f
+  # Add Species Aoff()
+  # Delete Pattern b()
+  # Delete Pattern b()
+  # Delete Pattern Aon()
+  # Reverse
+  # Add Species b()
+  # Add Species b()
+  # Add Species Aon()
+  # Delete Pattern Aoff()
+  Rule3:  Aon() -> Aon() + a()  g
+  # Add Species a()
+  Rule4:  Bon() -> Bon() + b()  g
+  # Add Species b()
+  Rule5:  a() -> trash()  k
+  # Add Species trash()
+  # Delete Pattern a()
+  Rule6:  b() -> trash()  k
+  # Add Species trash()
+  # Delete Pattern b()
+end reaction rules
+begin reactions
+    1 1,1,4 6 0.5*h #Rule1
+    2 6 1,1,4 f #Rule1r
+    3 2,2,3 5 0.5*h #Rule2
+    4 5 2,2,3 f #Rule2r
+    5 3 1,3 g #Rule3
+    6 4 2,4 g #Rule4
+    7 1 7 k #Rule5
+    8 2 7 k #Rule6
+end reactions
+begin groups
+    1 a                    1
+    2 b                    2
+    3 Aon                  3
+    4 Bon                  4
+    5 Aoff                 5
+    6 Boff                 6
+end groups
