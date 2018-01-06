@@ -32,4 +32,11 @@ BNG_root='/home/usr/BioNetGen_files/run_network'
 model_name='/home/usr/BioNetGen_files/models/schlogl.net' 
 
 General_bin_movement_and_transition_local_windows(transition_loops,voronoi_loops,temporary_save_location,target_bin_number,Replicas_per_bins,output_file_name,tau,species,output_save_file,BNG_root,model_name)
-
+%Outputs a matfile: output_file_name.mat
+%Inside the matfile, the output contains:
+%replicas: the current replica positions, tags, and replica weights
+%transition_matrix_count: the transition matrix calculated by finding the counts of transitions from sampling region i to sampling region during every lagtime tau
+%transition_matrix_count: the transition matrix calculated by summing the weight of transitions from sampling region i to sampling region during every lagtime tau
+%iteration: the current 0-4 temporary iteration number for temporarily stored replica information
+%toc: the current total computational time
+%ijk: the current ijk iteration of transition matrix calculation

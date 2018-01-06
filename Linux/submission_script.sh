@@ -35,3 +35,13 @@ model_name="/home/usr/BioNetGen_files/models/schlogl.net"
 #Change the matlab call to your MATLABROOT
 /usr/local/MATLAB/R2012a/bin/matlab -nodisplay -r "try,  General_bin_movement_and_transition_local_linux(${transition_loops},${voronoi_loops},${temporary_save_location},${target_bin_number},${Replicas_per_bins},${output_file_name},${tau},${species},${output_save_file},${BNG_root},${model_name}),catch,exit(0),end,exit(1)"
 
+#Outputs a matfile: output_file_name.mat
+#Inside the matfile, the output contains:
+#replicas: the current replica positions, tags, and replica weights
+#transition_matrix_count: the transition matrix calculated by finding the counts of transitions from sampling region i to sampling region during every lagtime tau
+#transition_matrix_count: the transition matrix calculated by summing the weight of transitions from sampling region i to sampling region during every lagtime tau
+#iteration: the current 0-4 temporary iteration number for temporarily stored replica information
+#toc: the current total computational time
+#ijk: the current ijk iteration of transition matrix calculation
+
+

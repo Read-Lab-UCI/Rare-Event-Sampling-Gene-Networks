@@ -287,11 +287,11 @@ for ijk = 1:transition_loops
     matobj_save_info.replicas = replicas;
     matobj_save_info.VoronoiCenters = VoronoiCenters;
     matobj_save_info.transition_matrix_count = transition_matrix_count ;
-    matobj_save_info.trans_matrix = transition_matrix ;
+    matobj_save_info.transition_matrix = transition_matrix ;
     if rem(ijk,2)==0
-        save([save_location ],'VoronoiCenters','replicas','transition_matrix_count','trans_matrix','iteration','-v7.3')
-        dlmwrite([temp_dir_transition 'trans_matrix_count' num2str(ijk) '.txt'],transition_matrix_count );
-        dlmwrite([temp_dir_transition 'trans_matrix' num2str(ijk) '.txt'],transition_matrix );
+        save([save_location ],'VoronoiCenters','replicas','transition_matrix_count','transition_matrix','iteration','toc','ijk','-v7.3')
+        dlmwrite([temp_dir_transition 'transition_matrix_count' num2str(ijk) '.txt'],transition_matrix_count );
+        dlmwrite([temp_dir_transition 'transition_matrix' num2str(ijk) '.txt'],transition_matrix );
         
         
         
@@ -311,7 +311,7 @@ end
 
 toc = cputime-tic;
 
-save([save_location ],'VoronoiCenters','replicas','transition_matrix_count','trans_matrix','iteration','toc','-v7.3')
+save([save_location ],'VoronoiCenters','replicas','transition_matrix_count','transition_matrix','iteration','toc','ijk','-v7.3')
 
 end
 
