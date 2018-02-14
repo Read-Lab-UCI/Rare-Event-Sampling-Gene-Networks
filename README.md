@@ -1,4 +1,4 @@
-# Adaptive_WE_public
+# Rare-Event-Sampling-Gene-Networks
 This repository contains code for running the weighted ensemble (WE) sampling method with adaptive Voronoi-based discretization on biochemical networks.
 
 There are three versions of the code, one for running the WE method to find a transition matrix of transitions between Voronoi-based sampling regions (General_bin_movement_and_transition_local_linux.m and General_bin_movement_and_transition_local_windows.m), and two for running the WE method to find the transition rate between two states of interest.
