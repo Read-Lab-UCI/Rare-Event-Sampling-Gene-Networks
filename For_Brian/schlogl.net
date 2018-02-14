@@ -1,0 +1,43 @@
+# Created by BioNetGen 2.2.0
+substanceUnits("Number");
+begin parameters
+    1 Atot      1e5  # Constant
+    2 Btot      2e5  # Constant
+    3 k1        3e-7  # Constant
+    4 k2        1e-4  # Constant
+    5 k3        1e-3  # Constant
+    6 k4        3.5  # Constant
+    7 rateLaw1  0.03  # ConstantExpression
+    8 rateLaw2  3.33333333333333e-05  # ConstantExpression
+    9 rateLaw3  200  # ConstantExpression
+end parameters
+begin molecule types
+    1 X()
+    2 I()
+end molecule types
+begin observables
+    1 Molecules X X()
+end observables
+begin species
+    1 X()  82
+    2 I()  1
+end species
+begin reaction rules
+  Rule1:  X() + X() <-> X() + X() + X()  rateLaw1, rateLaw2
+  # Add Species X()
+  # Reverse
+  # Delete Pattern X()
+  Rule2:  I() <-> X() + I()  rateLaw3, k4
+  # Add Species X()
+  # Reverse
+  # Delete Pattern X()
+end reaction rules
+begin reactions
+    1 1,1 1,1,1 0.5*rateLaw1 #Rule1
+    2 1,1,1 1,1 0.5*rateLaw2 #Rule1r
+    3 2 1,2 rateLaw3 #Rule2
+    4 1,2 2 k4 #Rule2r
+end reactions
+begin groups
+    1 X                    1
+end groups
