@@ -1,12 +1,12 @@
 #!/bin/sh
 #The number of simulation iterations used to calculate the transition matrix
-transition_loops="2000" 
+transition_loops="300" 
 
 #The number of simulation iterations used to calculate the Voronoi centers
-voronoi_loops="1000"  
+voronoi_loops="20"  
 
 #The file to store the temporary BNG files
-temporary_save_location="/home/usr/tempfiles" 
+temporary_save_location="/home/grad/Documents/tempfiles" 
 
 #Number of Voronoi centers 
 target_bin_number="100" 
@@ -15,25 +15,25 @@ target_bin_number="100"
 Replicas_per_bins="50" 
 
 #Example output file name
-output_file_name="transition_matrix_schlogl_tau_10_bin_100_010418.mat" 
+output_file_name="transition_matrix_ExMISA_test" 
 
 #The simulation lagtime tau
 tau="10" 
 
 #The number of chemical species to use in the Voronoi center movement calculation
-species="1" 
+species="8" 
 
 #location to store the output .mat file
-output_save_file="/home/usr/we_output_storage" 
+output_save_file="/home/grad/Documents/MATLAB/MISA_coarse_graining/" 
 
 #The BioNetGen root
-BNG_root="/home/usr/BioNetGen_files/run_network" 
+BNG_root="/home/grad/BioNetGen-2.2.6-stable/bin/run_network"
 
 #The BioNetGen .net model file location
-model_name="/home/usr/BioNetGen_files/models/schlogl.net" 
+model_name="/home/grad/Documents/MATLAB/MISA_coarse_graining/Ex_MISA.net" 
 
 #Change the matlab call to your MATLABROOT
-/usr/local/MATLAB/R2012a/bin/matlab -nodisplay -r "try,  General_bin_movement_and_transition_local_linux(${transition_loops},${voronoi_loops},${temporary_save_location},${target_bin_number},${Replicas_per_bins},${output_file_name},${tau},${species},${output_save_file},${BNG_root},${model_name}),catch,exit(0),end,exit(1)"
+/usr/local/MATLAB/R2014a/bin/matlab -nodisplay -r "try,  General_bin_movement_and_transition_local_linux_test('${transition_loops}','${voronoi_loops}','${temporary_save_location}','${target_bin_number}','${Replicas_per_bins}','${output_file_name}','${tau}','${species}','${output_save_file}','${BNG_root}','${model_name}'),catch,exit(0),end,exit(1)"
 
 #Outputs a matfile: output_file_name.mat
 #Inside the matfile, the output contains:
@@ -53,19 +53,19 @@ model_name="/home/usr/BioNetGen_files/models/schlogl.net"
 #Runs the rate calculation with previously definited Voronoi centers and uses a region of interest definition where region1 and region 2 are selections of Voronoi centers
 
 #The number of simulation iterations used to calculate the transition rate
-transition_rate_loops="2000" 
+#transition_rate_loops="2000" 
 
 #The file location specifying the original voronoi centers
-original_voronoi_center="voronoi_centers.txt"
+#original_voronoi_center="voronoi_centers.txt"
 
 #The file location that maps each voronoi center to a region e.g. from 0..10
-mapping_centers="map.txt"
+#mapping_centers="map.txt"
 
 #The voronoi centers mapping to region1 are the 1st region of interest
-region1="1" 
+#region1="1" 
 
 #The voronoi centers mapping to region2 are the 2nd region of interest
-region2="2" 
+#region2="2" 
 
 #Change the matlab call to your MATLABROOT and uncomment if you want to start a rate calculation
 #/usr/local/MATLAB/R2012a/bin/matlab -nodisplay -r "try,  General_bin_movement_and_rates_voronoi_bins_local_linux(${transition_rate_loops},${temporary_save_location},${Replicas_per_bins},${output_file_name},${tau},${species},${output_save_file},${BNG_root},${model_name},${original_voronoi_center},${mapping_centers},${region1},${region2}),catch,exit(0),end,exit(1)"
