@@ -65,11 +65,9 @@ begin reaction rules
 
     #all possible combinations of GATA6 binding
     GATA6(a1~0,a2,r1,r2) + ga() + ga()  <-> GATA6(a1~1,a2,r1,r2) h,f
-    GATA6(a1,a2~0,r1,r2) + oc() + so() <-> GATA6(a1,a2~1,r1,r2) h,f
-  #GATA6(a1,a2,r1,r2~0) + oc() + so() <-> GATA6(a1,a2,r1,r2~1) h,f
- GATA6(a1,a2,r1~0,r2) + na() + na() <-> GATA6(a1,a2,r1~1,r2) h,f
-    GATA6(a1,a2,r1,r2~0) + oc() + oc() <-> GATA6(a1,a2,r1,r2~1) h,f
-#	 GATA6(a1,a2~0,r1,r2) + oc() + oc() <-> GATA6(a1,a2~1,r1,r2) h,f
+    GATA6(a1,a2,r1,r2~0) + oc() + so() <-> GATA6(a1,a2,r1,r2~1) h,f
+    GATA6(a1,a2,r1~0,r2) + na() + na() <-> GATA6(a1,a2,r1~1,r2) h,f
+    GATA6(a1,a2~0,r1,r2) + oc() + oc() <-> GATA6(a1,a2~1,r1,r2) h,f
 
     #GATA6 one or more activators bound, no repressors bound
     GATA6(a1~1,a2~0,r1~0,r2~0) -> GATA6(a1~1,a2~0,r1~0,r2~0) + ga() gon
