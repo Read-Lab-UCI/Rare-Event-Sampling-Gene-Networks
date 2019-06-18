@@ -46,23 +46,23 @@ iteration = 1;
 %%MODIFY THIS PORTION OF THE CODE IS YOU ARE USING A MATLAB VERSION MORE RECENT THAN MATLAB R2012b
 %___________________________________________________________________________
 %%Opens the parallel pool for MATLAB R2012b and earlier versions.
-cores = 4; %%my computer only had 4 cores.
-if matlabpool('size')==0 %opens 'cores' cores for parallel use if the pool isn't already open.  
-    matlabpool(cores)
-end
+%cores = 4; %%my computer only had 4 cores.
+%if matlabpool('size')==0 %opens 'cores' cores for parallel use if the pool isn't already open.  
+%    matlabpool(cores)
+%end
 
 %% Opens the parallel pool for versions more recent than MATLAB R2012b
 
-% poolobj = gcp('nocreate'); % If no pool, do not create new one.
-% if isempty(poolobj)
-%    poolsize = 0;
-% else
-%    poolsize = poolobj.NumWorkers;
-% end
+ poolobj = gcp('nocreate'); % If no pool, do not create new one.
+ if isempty(poolobj)
+    poolsize = 0;
+ else
+    poolsize = poolobj.NumWorkers
+ end
 
-% if poolsize == 0
-%    parpool('local')
-% end
+ if poolsize == 0
+    parpool('local')
+ end
 %___________________________________________________________________________
 
 
