@@ -1,30 +1,49 @@
 # Rare-Event-Sampling-Gene-Networks
 This repository contains code for running the weighted ensemble (WE) sampling method with adaptive Voronoi-based discretization on biochemical networks.
 
+### Requirements
+- Operating System Requirements/Recommendations
+  - Linux (Recommended) or Mac OS X 
+  - Windows is not fully implemented but a basic version is included as an example
+- Matlab 2013a or newer
+
 There are three versions of the code, one for running the WE method to find a transition matrix of transitions between Voronoi-based sampling regions (General_bin_movement_and_transition_local_linux.m and General_bin_movement_and_transition_local_windows.m), and two for running the WE method to find the transition rate between two states of interest.
 
-There are two versions of the code for the WE method in transition rate estimation mode, one which finds the rate between two hyperspheres (General_bin_movement_and_rates_hypersphere_local_linux.m), and one that finds the rate between two sets of Voronoi centers(General_bin_movement_and_rates_voronoi_bins_local_linux.m).
+### Included
 
-Both versions can be run on Windows or Linux, so long as permissions to read the BioNetGen run_network application (under BioNetGen_files) and .net files are properly set.
+There are three versions of the code (found in the Linux folder): 
+1. Running the WE method to find a transition matrix of transitions between Voronoi-based sampling regions 
+   - `General_bin_movement_and_transition_local.m` 
+2. Running the WE method to find the transition rate between two hypershperes.
+   - `General_bin_movement_and_rates_hypersphere_local.m`
+3. Running the WE method to find the transition rate between two sets of Voronoi centers.
+   - `General_bin_movement_and_rates_voronoi_bins_local.m`
 
-To run the code, use submission_script.sh or submission_script.m for linux or windows, respectively.
-Inside submission_script.sh (or *.m), all parameters for running the WE method can be set. If you want to use one of the three versions of the code, comment/ uncomment the appropriate lines. The default is set to run the transition matrix calculation.
-The WE method codes are currently set to open parallel pools for MATLAB R2012b and earlier versions. The parallel computing toolbox is necessary to use paralell computing. If you are using a more recent version of MATLAB, use the parpool option in comments in the main .m files.
+### Instructions
 
-The output of General_bin_movement_and_transition_local_linux.m returns a .mat file with the prefix specified in the input parameters (see submission_script.m or submission_script.sh).
+Permissions to read the BioNetGen `run_network` application (under `/BioNetGen_files/`) and any `*.net` files must be properly set.
 
-Inside the .mat file are several variables:
+To run the code, use `submission_script.sh` or `submission_script.m` for linux or windows, respectively.
 
-VoronoiCenters: the current position of all Voronoi centers
+Inside `submission_script.sh` (or `submission_script.m`), all parameters for running the WE method can be set. 
 
-replicas: the current replica positions, tags, and replica weights
+Comment/uncomment the appropriate lines to select which version (1-3) to run. The default is the transition matrix calculation.
 
-transition_matrix_count: the transition matrix calculated by finding the counts of transitions from sampling region i to sampling region during every lagtime tau
+The output of `General_bin_movement_and_transition_local_linux.m` is a .mat file with the prefix specified in the input parameters (see `submission_script.m` or `submission_script.sh`).
 
-transition_matrix_count: the transition matrix calculated by summing the weight of transitions from sampling region i to sampling region during every lagtime tau
 
-iteration: the current 0-4 temporary iteration number for temporarily stored replica information
+### Inside the .mat file are the following variables:
 
-toc: the current total computational time
+* VoronoiCenters: the current position of all Voronoi centers
 
-ijk: the current ijk iteration of transition matrix calculation
+* replicas: the current replica positions, tags, and replica weights
+
+* transition_matrix_count: the transition matrix calculated by finding the counts of transitions from sampling region i to sampling region during every lagtime tau
+
+* transition_matrix_count: the transition matrix calculated by summing the weight of transitions from sampling region i to sampling region during every lagtime tau
+
+* iteration: the current 0-4 temporary iteration number for temporarily stored replica information
+
+* toc: the current total computational time
+
+* ijk: the current ijk iteration of transition matrix calculation
