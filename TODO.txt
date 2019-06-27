@@ -1,0 +1,8 @@
+Fix post processing in WE code
+Incorporate MSM builder into WE code as well (see gdrive/Hybrid_PBN)
+
+Pyemma or Networkx for "force directed layout"
+
+Include requirements txt/yml file for anaconda
+
+Update README with anaconda/python instructions
