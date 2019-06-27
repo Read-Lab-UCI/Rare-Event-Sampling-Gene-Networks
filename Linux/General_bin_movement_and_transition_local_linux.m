@@ -43,26 +43,26 @@ end
 
 
 iteration = 1;
-%%MODIFY THIS PORTION OF THE CODE IS YOU ARE USING A MATLAB VERSION MORE RECENT THAN MATLAB R2012b
+%%MODIFY THIS PORTION OF THE CODE IS YOU ARE USING A MATLAB VERSION OLDER THAN R2013a
 %___________________________________________________________________________
 %%Opens the parallel pool for MATLAB R2012b and earlier versions.
-cores = 4; %%my computer only had 4 cores.
-if matlabpool('size')==0 %opens 'cores' cores for parallel use if the pool isn't already open.  
-    matlabpool(cores)
-end
+%cores = 4; %%my computer only had 4 cores.
+%if matlabpool('size')==0 %opens 'cores' cores for parallel use if the pool isn't already open.  
+%    matlabpool(cores)
+%end
 
-%% Opens the parallel pool for versions more recent than MATLAB R2012b
+%% Opens the parallel pool for versions R2013b and forward
 
-% poolobj = gcp('nocreate'); % If no pool, do not create new one.
-% if isempty(poolobj)
-%    poolsize = 0;
-% else
-%    poolsize = poolobj.NumWorkers;
-% end
+ poolobj = gcp('nocreate'); % If no pool, do not create new one.
+ if isempty(poolobj)
+    poolsize = 0;
+ else
+    poolsize = poolobj.NumWorkers
+ end
 
-% if poolsize == 0
-%    parpool('local')
-% end
+ if poolsize == 0
+    parpool('local')
+ end
 %___________________________________________________________________________
 
 
@@ -129,7 +129,8 @@ replicas = WEstep_072116(replicas,VoronoiCenters,Replicas_per_bins,species);
 %%loop for moving the voronoi positions. Transition matrix calculation is
 %%disabled in this loop
 for ijk = 1:voronoi_loops
-    
+    display(['Voronoi iteration ' num2str(ijk) ]);
+
     
     
     %%creates a new temporary file. Currently, the maximum number of stored
@@ -221,7 +222,7 @@ transition_matrix = zeros(target_bin_number);%initializes the transition matrix 
 %%simulation loop for calculating the transition matrix
 for ijk = 1:transition_loops
     
-    
+    display(['Iteration ' num2str(ijk) ]);
     %%definitions are the same here as in the Voronoi center calculation.
     
     newBNGdir = [BioNetGen_replica_folder '/t' num2str(iteration)];
@@ -312,6 +313,22 @@ end
 toc = cputime-tic;
 
 save([save_location ],'VoronoiCenters','replicas','transition_matrix_count','transition_matrix','iteration','toc','ijk','-v7.3')
+
+
+trans_matrix_temp_var_raw = transition_matrix;
+row_summation_trans_matrix = sum(trans_matrix_temp_var_raw,2);
+idx_zeros_in_trans_matrix = find(row_summation_trans_matrix==0);
+trans_matrix_temp_var_raw(idx_zeros_in_trans_matrix,:) = [];
+trans_matrix_temp_var_raw(:,idx_zeros_in_trans_matrix) = [];
+row_summation_trans_matrix(idx_zeros_in_trans_matrix) = [];
+trans_matrix_tot_row=repmat(row_summation_trans_matrix,1,size(trans_matrix_temp_var_raw,2));
+T=trans_matrix_temp_var_raw./trans_matrix_tot_row; %this is the transition probability that you should give to Brian
+[Eigenvectors,Eigenvalues]=eig(transpose(T));
+[sorted_Eigevnalues,ik]=sort((real(diag(Eigenvalues))));
+sorted_Eigenvalues = flipud(sorted_Eigevnalues(1:end));
+lifetimes = -tau./log(flipud(sorted_Eigevnalues(1:end-1)));
+
+display(['The three slowest lifetimes are: ' num2str(lifetimes(1)) ', ' num2str(lifetimes(2)) ', and ' num2str(lifetimes(3))])
 
 end
 

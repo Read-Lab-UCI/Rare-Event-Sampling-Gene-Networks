@@ -33,6 +33,8 @@ BNG_root="/home/grad/BioNetGen-2.2.6-stable/bin/run_network"
 model_name="/home/grad/Documents/MATLAB/MISA_coarse_graining/Ex_MISA.net"
 
 #Change the matlab call to your MATLABROOT
+# For HPC
+# module load MATLAB/r2018a
 /data/apps/matlab/R2018a/bin/matlab -nodisplay -nodesktop -nosplash -r "try,  General_bin_movement_and_transition_local_linux_test('${transition_loops}','${voronoi_loops}','${temporary_save_location}','${target_bin_number}','${Replicas_per_bins}','${output_file_name}','${tau}','${species}','${output_save_file}','${BNG_root}','${model_name}'),catch,exit(0),end,exit(1)"
 
 #Outputs a matfile: output_file_name.mat
