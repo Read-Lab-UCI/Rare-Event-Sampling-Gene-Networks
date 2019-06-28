@@ -20,7 +20,8 @@ load(file_name);
 %%%For older versions, the variable trans_matrix_prob needs to be converted
 %%%to trans_matrix;
 
-trans_matrix = trans_matrix_prob;
+%trans_matrix = trans_matrix_prob;
+trans_matrix = transition_matrix;
 
 %creates an output directory with the same name as the file_name
 out_dir = [file_name '/'];
@@ -48,7 +49,7 @@ trans_matrix_tot_row=repmat(row_summation_trans_matrix,1,size(trans_matrix_temp_
 T=trans_matrix_temp_var_raw./trans_matrix_tot_row; %this is the transition probability that you should give to Brian
 
 %%removes bins from the Voronoi centers that are not visited.
-StatesList = VoronoiLocs;
+StatesList = VoronoiCenters;
 StatesList(idx_zeros_in_trans_matrix,:) = [];
 
 
@@ -63,7 +64,7 @@ Probability_Surface = ((Eigenvectors(:,1))./sum(Eigenvectors(:,1)));
 
 
 
-save([out_dir 'data.mat'],'T','trans_matrix','Probability_Surface','lifetimes','StatesList','VoronoiLocs','Eigenvectors','sorted_Eigenvalues','-v7.3');
+save([out_dir 'data.mat'],'T','trans_matrix','Probability_Surface','lifetimes','StatesList','VoronoiCenters','Eigenvectors','sorted_Eigenvalues','-v7.3');
 
 %Changing the naming convention for use in MSMbuilder
 
@@ -80,7 +81,7 @@ save([out_dir 'VVs.mat'],'VVs');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%Plots the eigenvalues and lifetimes
-
+%%Needs to be manually adjusted depending on input model 
 fontsize = 20;
 linewidth = 2;
 markersize = 25;
@@ -135,8 +136,6 @@ if images == 1
     print([out_dir 'eigenvalues.png'],'-dpng')
 end
 
-
-
 %%Scatter plots species1 vs. species2
 figure(2)
 scatter(StatesList(:,species1),StatesList(:,species2),(Probability_Surface).*prob_scale,(Probability_Surface),'filled')
@@ -146,7 +145,6 @@ set(gca,'FontSize',fontsize)
 axis('square')
 
 box on
-
 
 if images == 1
     print([out_dir 'scatter.png'],'-dpng')
