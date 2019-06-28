@@ -13,17 +13,37 @@ function General_bin_movement_and_rates_hypersphere_local_linux(transition_rate_
     tic = cputime;
 
     %% Setting up folders 
-    % Initializes the temporary directory and the final saave directory.
+    % Initializing temporary and the final save directory.
     save_location = [output_save_file '/' output_file_name '.mat'];
     temp_dir_transition = [output_save_file '/' output_file_name '/'];
     if not(exist(temp_dir_transition, 'dir'))
         mkdir(temp_dir_transition);
     end
-    matobj_save_info = matfile(save_location,'Writable',true); %saving the updated weights of the regions
+    matobj_save_info = matfile(save_location,'Writable',true);
 
     BioNetGen_replica_folder = [temporary_save_location];
     if not(exist([BioNetGen_replica_folder '/t0'], 'dir'))
         mkdir([BioNetGen_replica_folder '/t0']);
+    end
+    
+    %% Initializing parallel pool depending on matlab version
+    if verLessThan('matlab','8.1')
+        % Runs on R2012b and earlier
+        cores = 4; 
+        if matlabpool('size')==0   
+            matlabpool(cores)
+        end
+    else
+        % Runs on R2013a and later
+        poolobj = gcp('nocreate'); % If no pool, do not create new one.
+        if isempty(poolobj)
+            poolsize = 0;
+        else
+            poolsize = poolobj.NumWorkers;
+        end
+        if poolsize == 0
+            parpool('local');
+        end
     end
     
     %% Step 0: Initializing first iteration and loading regions
@@ -48,8 +68,8 @@ function General_bin_movement_and_rates_hypersphere_local_linux(transition_rate_
         current_replica_location = dlmread([BioNetGen_replica_folder '/t0/newsim_' num2str(ii) '.gdat'],'',2,1);
         data_keep = [current_replica_location(end,: )];
         
-        %%stores the replicas as [replica positions, tag for resimulating the
-        %%.net file, weight of the replica]
+        % storing replicas as:
+        % [replica positions, tag for resimulating the .net file, weight of the replica]
         replicas = vertcat(replicas,[data_keep,ii,initial_weight]);
     end
 
@@ -172,7 +192,7 @@ function General_bin_movement_and_rates_hypersphere_local_linux(transition_rate_
             update_MFPT(ijk,i) = 1/(rates(i).total_weight_of_replicas_transferred(ijk,1)./(rates(i).total_probability_in_region_i(ijk,1))./(tau));     
         end
         
-        % Creates a file updated with the current MFPT calculatoin
+        % Creates a file updated with the current MFPT calculation
         if ijk == 1
             dlmwrite([temp_dir_transition 'MFPT_per_ijk_iteration.txt'],update_MFPT(ijk,:) );
             dlmwrite([temp_dir_transition 'rate_per_ijk_iteration.txt'],1./update_MFPT(ijk,:) );
@@ -197,7 +217,7 @@ end
 function [newreps] = WEstep_072116(replicas,Voronoi_List,numreps,species)
     newreps = [];
     bins = knnsearch(Voronoi_List,replicas(:,1:species));
-    %This code assumes the columns of the replicas matrix are the species, and that the weights are in the last column
+    % This code assumes the columns of the replicas matrix are the species, and that the weights are in the last column
     parfor i = 1:length(Voronoi_List(:,1))
         replicas_in_bini = replicas(bins==i,:);
         if not(isempty(replicas_in_bini))

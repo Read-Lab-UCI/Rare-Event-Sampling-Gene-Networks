@@ -261,7 +261,7 @@ end
 function [newreps] = WEstep_072116(replicas,Voronoi_List,numreps,species)
     newreps = [];
     bins = knnsearch(Voronoi_List,replicas(:,1:species));
-    %This code assumes the columns of the replicas matrix are the species, and that the weights are in the last column
+    % This code assumes the columns of the replicas matrix are the species, and that the weights are in the last column
     parfor i = 1:length(Voronoi_List(:,1))
         replicas_in_bini = replicas(bins==i,:);
         if not(isempty(replicas_in_bini))
