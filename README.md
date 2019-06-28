@@ -7,8 +7,6 @@ This repository contains code for running the weighted ensemble (WE) sampling me
   - Windows is not fully implemented but a basic version is included as an example
 - Matlab 2013a or newer
 
-There are three versions of the code, one for running the WE method to find a transition matrix of transitions between Voronoi-based sampling regions (General_bin_movement_and_transition_local_linux.m and General_bin_movement_and_transition_local_windows.m), and two for running the WE method to find the transition rate between two states of interest.
-
 ### Included
 
 There are three versions of the code (found in the Linux folder): 
