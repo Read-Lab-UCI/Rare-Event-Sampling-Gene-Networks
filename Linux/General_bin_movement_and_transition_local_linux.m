@@ -276,6 +276,7 @@ function [newreps] = WEstep_072116(replicas,Voronoi_List,numreps,species)
     end
 end
 
+
 %% WEstep algorithm 
 function newreps = WEstep(curr_reps,numreps)  %%%%%error in weight calc
     blah = length(curr_reps(:,1));
@@ -379,6 +380,7 @@ function newreps = WEstep(curr_reps,numreps)  %%%%%error in weight calc
             error(' replica number from WEstep after splitting is wrong');
         end
     end
+
     w5 = sum(newreps(:,end));
 
     % Checking for errors in the weight calculation.
@@ -389,6 +391,3 @@ function newreps = WEstep(curr_reps,numreps)  %%%%%error in weight calc
         error('Final replica length is wrong');
     end
 end
-
-
-
